@@ -23,6 +23,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
+#include <ctype.h>
 #include <getopt.h>
 #include <time.h>
 #include <sys/select.h>
@@ -262,7 +263,11 @@ int open_usbdev(struct ledscreen *disp) {
 	}
 
 	if(debug) {
+#if LIBUSB_API_VERSION >= 0x01000106
+		libusb_set_option(NULL, LIBUSB_OPTION_LOG_LEVEL, 3);
+#else
 		libusb_set_debug(NULL,3);
+#endif
 	}	
 
 	/* Fetch a list of all the available devices. */
